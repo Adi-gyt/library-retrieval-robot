@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<sdf version="1.6">
+  <model name="aruco_marker_0">
+    <!-- static: true means it doesn't fall/move under physics — it's a
+         fixed prop in the world, not a robot part -->
+    <static>true</static>
+    <link name="link">
+      <visual name="visual">
+        <!-- thin in X (0.001m), 15cm square face — the two large faces
+             (facing +X and -X) get the marker texture, so whichever one
+             the camera sees will show the marker -->
+        <geometry>
+          <box>
+            <size>0.001 0.15 0.15</size>
+          </box>
+        </geometry>
+        <material>
+          <script>
+            <uri>model://aruco_marker_0/materials/scripts</uri>
+            <uri>model://aruco_marker_0/materials/textures</uri>
+            <name>ArucoMarker/Marker0</name>
+          </script>
+        </material>
+      </visual>
+    </link>
+  </model>
+</sdf>
