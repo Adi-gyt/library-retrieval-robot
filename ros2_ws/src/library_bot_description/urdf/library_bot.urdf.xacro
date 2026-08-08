@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<robot name="library_bot" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!--
+    Placeholder robot description. Purpose: give the D405 camera something
+    to mount on so we can verify it actually publishes real topics in
+    Gazebo, before any real arm geometry exists.
+
+    base_footprint -> base_link -> ee_placeholder_link -> d405_link
+
+    ee_placeholder_link stands in for wherever the real end-effector /
+    wrist will eventually be, once arm geometry (O1, blocked on the
+    library visit) locks. Nothing downstream depends on its exact
+    position being correct yet.
+  -->
+
+  <xacro:include filename="$(find library_bot_description)/urdf/d405_camera.xacro"/>
+
+  <!-- base_footprint is a standard ROS convention: a massless frame at
+       ground level, directly below base_link, used as the reference
+       point nav2 and other tools expect. base_link itself can then sit
+       up off the ground at the robot's actual body height. -->
+  <link name="base_footprint"/>
+
+  <link name="base_link">
+    <inertial>
+      <mass value="5.0"/>
+      <origin xyz="0 0 0"/>
+      <inertia ixx="0.05" ixy="0" ixz="0" iyy="0.05" iyz="0" izz="0.05"/>
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry><box size="0.3 0.3 0.2"/></geometry>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry><box size="0.3 0.3 0.2"/></geometry>
+    </collision>
+  </link>
+
+  <joint name="base_joint" type="fixed">
+    <parent link="base_footprint"/>
+    <child link="base_link"/>
+    <origin xyz="0 0 0.1" rpy="0 0 0"/>
+  </joint>
+
+  <link name="ee_placeholder_link"/>
+
+  <joint name="ee_placeholder_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="ee_placeholder_link"/>
+    <origin xyz="0 0 0.5" rpy="0 0 0"/>
+  </joint>
+
+  <xacro:d405_camera parent="ee_placeholder_link" xyz="0 0 0" rpy="0 0 0"/>
+
+</robot>

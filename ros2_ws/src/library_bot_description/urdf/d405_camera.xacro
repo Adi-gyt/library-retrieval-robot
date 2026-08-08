@@ -1,0 +1,110 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!--
+    Sim Step 1 (revised) — Intel RealSense D405, replacing the IMX219-83
+    two-camera stereo rig.
+
+    Real hardware specs (Intel/RealSense datasheet, confirmed):
+      FOV:          87 deg horizontal x 58 deg vertical
+      Depth range:  7cm - 50cm ideal operating window (sub-mm accuracy at 7cm,
+                    ~1.4% error at 20cm) — values outside this range are not
+                    to be trusted on real hardware, so clip is set to match.
+      Output:       registered RGB + depth (onboard stereo ASIC does the
+                    matching on real hardware — you never see raw left/right
+                    frames or do your own disparity computation)
+      Resolution:   up to 1280x720 depth; using 640x480 here to stay light
+                    on the RTX 3050's 4GB VRAM. Bump up once perf is proven.
+      Shutter:      global (matters for eye-in-hand motion, not modeled by
+                    Gazebo's ideal camera sensor, but noting for real
+                    hardware bring-up later)
+
+    Why this replaces the stereo xacro: the D405 does its own onboard depth
+    computation, so unlike the IMX219-83, there's no manual stereo
+    calibration or StereoSGBM/StereoBM step in sim. Gazebo's depth sensor
+    gives ground-truth depth directly, mirroring what the D405's ASIC
+    would hand you on real hardware. This collapses old Sim Step 2
+    ("verify clean depth output") into just confirming this topic looks
+    sane — no separate depth-computation node to build.
+
+    Usage: xacro:include this file, then instantiate from wherever the
+    eye-in-hand mount lives on the (placeholder) arm:
+
+      <xacro:d405_camera parent="END_EFFECTOR_LINK_NAME"
+                          xyz="0 0 0" rpy="0 0 0"/>
+  -->
+
+  <xacro:property name="d405_hfov" value="1.51844"/>  <!-- 87 deg in radians -->
+  <xacro:property name="d405_width" value="640"/>
+  <xacro:property name="d405_height" value="480"/>
+  <xacro:property name="d405_update_rate" value="15"/>  <!-- Hz; raise once perf is confirmed -->
+  <xacro:property name="d405_near" value="0.07"/>       <!-- matches datasheet min range -->
+  <xacro:property name="d405_far" value="0.5"/>         <!-- matches datasheet max reliable range -->
+  <xacro:property name="M_PI" value="3.14159265359"/>
+
+  <xacro:macro name="d405_camera" params="parent xyz:='0 0 0' rpy:='0 0 0'">
+
+    <link name="d405_link">
+      <inertial>
+        <mass value="0.06"/>  <!-- real D405 weighs 60g -->
+        <origin xyz="0 0 0"/>
+        <inertia ixx="1e-6" ixy="0" ixz="0" iyy="1e-6" iyz="0" izz="1e-6"/>
+      </inertial>
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry><box size="0.042 0.042 0.023"/></geometry>  <!-- real D405 dimensions -->
+      </visual>
+    </link>
+
+    <joint name="d405_joint" type="fixed">
+      <parent link="${parent}"/>
+      <child link="d405_link"/>
+      <origin xyz="${xyz}" rpy="${rpy}"/>
+    </joint>
+
+    <!-- REP-103 optical frame convention: z forward, x right, y down -->
+    <link name="d405_optical_frame"/>
+    <joint name="d405_optical_joint" type="fixed">
+      <parent link="d405_link"/>
+      <child link="d405_optical_frame"/>
+      <origin xyz="0 0 0" rpy="${-M_PI/2} 0 ${-M_PI/2}"/>
+    </joint>
+
+    <gazebo reference="d405_link">
+      <sensor type="depth" name="d405_sensor">
+        <update_rate>${d405_update_rate}</update_rate>
+        <camera name="d405">
+          <horizontal_fov>${d405_hfov}</horizontal_fov>
+          <image>
+            <width>${d405_width}</width>
+            <height>${d405_height}</height>
+            <format>R8G8B8</format>
+          </image>
+          <clip>
+            <near>${d405_near}</near>
+            <far>${d405_far}</far>
+          </clip>
+          <noise>
+            <type>gaussian</type>
+            <mean>0.0</mean>
+            <stddev>0.005</stddev>  <!-- tighter than the old stereo noise, matching D405's higher precision -->
+          </noise>
+        </camera>
+        <plugin name="d405_controller" filename="libgazebo_ros_camera.so">
+          <ros>
+            <namespace>d405</namespace>
+            <remapping>image_raw:=color/image_raw</remapping>
+            <remapping>camera_info:=color/camera_info</remapping>
+            <remapping>depth/image_raw:=depth/image_rect_raw</remapping>
+            <remapping>depth/camera_info:=depth/camera_info</remapping>
+            <remapping>points:=depth/points</remapping>
+          </ros>
+          <camera_name>d405</camera_name>
+          <frame_name>d405_optical_frame</frame_name>
+        </plugin>
+      </sensor>
+    </gazebo>
+
+  </xacro:macro>
+
+</robot>
