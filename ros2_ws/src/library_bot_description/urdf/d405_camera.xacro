@@ -38,8 +38,8 @@
   <xacro:property name="d405_width" value="640"/>
   <xacro:property name="d405_height" value="480"/>
   <xacro:property name="d405_update_rate" value="15"/>  <!-- Hz; raise once perf is confirmed -->
-  <xacro:property name="d405_near" value="0.07"/>       <!-- matches datasheet min range -->
-  <xacro:property name="d405_far" value="0.5"/>         <!-- matches datasheet max reliable range -->
+  <xacro:property name="d405_near" value="0.07"/>       <!-- TEMP: widened for debugging, was 0.07 -->
+  <xacro:property name="d405_far" value="0.5"/>          <!-- TEMP: widened for debugging, was 0.5 -->
   <xacro:property name="M_PI" value="3.14159265359"/>
 
   <xacro:macro name="d405_camera" params="parent xyz:='0 0 0' rpy:='0 0 0'">
@@ -91,6 +91,8 @@
           </noise>
         </camera>
         <plugin name="d405_controller" filename="libgazebo_ros_camera.so">
+          <min_depth>0.05</min_depth>
+          <max_depth>0.6</max_depth>
           <ros>
             <namespace>d405</namespace>
             <remapping>image_raw:=color/image_raw</remapping>

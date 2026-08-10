@@ -6,12 +6,13 @@
     <static>true</static>
     <link name="link">
       <visual name="visual">
-        <!-- thin in X (0.001m), 15cm square face — the two large faces
-             (facing +X and -X) get the marker texture, so whichever one
-             the camera sees will show the marker -->
+        <!-- 1cm thick in X, 15cm square face — thick enough to avoid
+             depth-camera rendering artifacts on razor-thin geometry
+             (0.001m caused -inf/invalid depth reads at the marker's
+             exact pixel location, even though it rendered fine in RGB) -->
         <geometry>
           <box>
-            <size>0.001 0.15 0.15</size>
+            <size>0.01 0.15 0.15</size>
           </box>
         </geometry>
         <material>

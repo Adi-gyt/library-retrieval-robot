@@ -20,3 +20,4 @@ __pycache__/
 # Editor/OS junk
 .vscode/
 .DS_Store
+ros2_ws/*.png
