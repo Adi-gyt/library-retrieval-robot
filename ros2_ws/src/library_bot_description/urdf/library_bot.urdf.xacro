@@ -53,33 +53,4 @@
   </joint>
 
   <xacro:d405_camera parent="ee_placeholder_link" xyz="0 0 0" rpy="0 0 0"/>
-    <!-- Sim Step 2 test target: a small box placed 0.3m directly in front of
-       the D405 (within its 0.07-0.5m depth range), purely to confirm the
-       depth sensor gives correct, non-garbage distance readings. Not part
-       of the real robot — remove once Step 2 is verified. -->
-  <link name="test_target_link">
-    <visual>
-      <origin xyz="0 0 0" rpy="0 0 0"/>
-      <geometry><box size="0.05 0.1 0.1"/></geometry>
-    </visual>
-    <collision>
-      <origin xyz="0 0 0" rpy="0 0 0"/>
-      <geometry><box size="0.05 0.1 0.1"/></geometry>
-    </collision>
-    <inertial>
-      <mass value="0.01"/>
-      <origin xyz="0 0 0"/>
-      <inertia ixx="1e-6" ixy="0" ixz="0" iyy="1e-6" iyz="0" izz="1e-6"/>
-    </inertial>
-  </link>
-
-  <joint name="test_target_joint" type="fixed">
-    <parent link="base_link"/>
-    <child link="test_target_link"/>
-    <origin xyz="0.3 0 0.5" rpy="0 0 0"/>
-  </joint>
-  
-  <gazebo reference="test_target_link">
-    <material>Gazebo/Grey</material>
-  </gazebo>
 </robot>
