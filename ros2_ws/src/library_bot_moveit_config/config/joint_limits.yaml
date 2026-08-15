@@ -1,0 +1,39 @@
+# Velocity limits pulled directly from library_bot_urdf.xacro <limit> tags
+# (these are the joint-level velocity="" values -- position limits and
+# effort come from the URDF itself and don't need duplicating here).
+# Acceleration limits are NOT in the URDF (URDF has no accel field) --
+# the values below are conservative sim-planning estimates, not measured,
+# consistent with this URDF's existing "sim-appropriate estimate, not a
+# measured hardstop" convention for joint3_elbow's limit. Revisit once
+# real motor accel specs exist.
+joint_limits:
+  joint1_waist:
+    has_velocity_limits: true
+    max_velocity: 1.0
+    has_acceleration_limits: true
+    max_acceleration: 1.0
+  joint2_shoulder:
+    has_velocity_limits: true
+    max_velocity: 1.0
+    has_acceleration_limits: true
+    max_acceleration: 1.0
+  joint3_elbow:
+    has_velocity_limits: true
+    max_velocity: 1.0
+    has_acceleration_limits: true
+    max_acceleration: 1.0
+  joint4_wrist1:
+    has_velocity_limits: true
+    max_velocity: 1.5
+    has_acceleration_limits: true
+    max_acceleration: 1.5
+  joint5_wrist2:
+    has_velocity_limits: true
+    max_velocity: 1.5
+    has_acceleration_limits: true
+    max_acceleration: 1.5
+  joint6_wrist3:
+    has_velocity_limits: true
+    max_velocity: 1.5
+    has_acceleration_limits: true
+    max_acceleration: 1.5

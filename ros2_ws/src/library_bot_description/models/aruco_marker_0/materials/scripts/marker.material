@@ -4,6 +4,7 @@ material ArucoMarker/Marker0
   {
     pass
     {
+      lighting off
       texture_unit
       {
         texture aruco_marker_0.png

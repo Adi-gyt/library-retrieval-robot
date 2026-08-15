@@ -42,10 +42,17 @@ class ArucoBackproject(Node):
             return
         rgb = np.frombuffer(msg.data, dtype=np.uint8).reshape(msg.height, msg.width, 3)
         gray = cv2.cvtColor(rgb, cv2.COLOR_RGB2GRAY)
-
-        corners, ids, _ = self.detector.detectMarkers(gray)
+        
+        corners, ids, rejected = self.detector.detectMarkers(gray)
         if ids is None:
+            if not hasattr(self, '_logged_fail'):
+                self.get_logger().warn(
+                    f"No marker detected this frame. Rejected candidates: {len(rejected)}. "
+                    f"Image shape: {gray.shape}, mean brightness: {gray.mean():.1f}"
+                )
+                self._logged_fail = True
             return
+  
         c = corners[0][0]
         self.get_logger().info(f"Raw corners: {c.tolist()}")
         u = int(np.mean(c[:, 0]))

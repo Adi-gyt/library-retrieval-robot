@@ -1,0 +1,9 @@
+# Initial joint positions -- all zero, matching the SRDF "home" group state
+# and the DH table's theta_i=0 convention.
+initial_positions:
+  joint1_waist: 0.0
+  joint2_shoulder: 0.0
+  joint3_elbow: 0.0
+  joint4_wrist1: 0.0
+  joint5_wrist2: 0.0
+  joint6_wrist3: 0.0

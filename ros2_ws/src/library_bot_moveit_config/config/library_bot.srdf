@@ -1,0 +1,60 @@
+<?xml version="1.0" ?>
+<!--
+  Hand-authored SRDF for library_bot (Sim Step 6).
+
+  Chain: base_footprint -> base_link -> link1(waist) -> link2(shoulder)
+  -> link3(elbow) -> link4/5/6(spherical wrist) -> ee_link -> D405.
+
+  base_footprint -> base_link is a FIXED joint already defined in the URDF
+  (base_joint, +0.40m z). No <virtual_joint> is needed here since the tree
+  is already fully connected to base_footprint in the URDF itself.
+
+  Joint limits/axes match the confirmed DH table derived and numerically
+  verified against this URDF (max FK error 1.66e-16 across 20 random
+  configs) in the prior session.
+-->
+<robot name="library_bot">
+
+  <!-- ============ PLANNING GROUP: the 6-DOF arm ============ -->
+  <group name="arm">
+    <chain base_link="base_link" tip_link="ee_link"/>
+  </group>
+
+  <!-- End effector: ee_link is where the D405 mounts (xyz="0.05 0 0" offset
+       from ee_link per the xacro:d405_camera include) and is the frame the
+       vision pipeline's back-projected/transformed target pose is defined
+       against downstream (base_footprint-frame per Sim Step 5). -->
+  <end_effector name="ee" parent_link="ee_link" group="arm"/>
+
+  <!-- ============ NAMED GROUP STATES ============ -->
+  <!-- All-zero pose. Matches the DH table's convention: every URDF joint's
+       zero position lines up directly with theta_i = 0, so this is also a
+       trivially-checkable pose for early KDL sanity testing. -->
+  <group_state name="home" group="arm">
+    <joint name="joint1_waist" value="0"/>
+    <joint name="joint2_shoulder" value="0"/>
+    <joint name="joint3_elbow" value="0"/>
+    <joint name="joint4_wrist1" value="0"/>
+    <joint name="joint5_wrist2" value="0"/>
+    <joint name="joint6_wrist3" value="0"/>
+  </group_state>
+
+  <!-- ============ SELF-COLLISION EXCEPTIONS ============ -->
+  <!-- Every pair below is directly connected by a revolute joint in the
+       URDF, so their collision geometry always overlaps at the shared
+       joint origin regardless of joint angle - these are "adjacent link"
+       exceptions, the standard case moveit_setup_assistant's GUI would
+       also generate automatically via its collision-matrix generator. -->
+  <disable_collisions link1="base_footprint" link2="base_link" reason="Adjacent"/>
+  <disable_collisions link1="base_link" link2="link1" reason="Adjacent"/>
+  <disable_collisions link1="link1" link2="link2" reason="Adjacent"/>
+  <disable_collisions link1="link2" link2="link3" reason="Adjacent"/>
+  <disable_collisions link1="link3" link2="link4" reason="Adjacent"/>
+  <disable_collisions link1="link4" link2="link5" reason="Adjacent"/>
+  <disable_collisions link1="link5" link2="ee_link" reason="Adjacent"/>
+
+  <disable_collisions link1="link3" link2="link5" reason="Default"/>
+  <disable_collisions link1="link3" link2="ee_link" reason="Default"/>
+  <disable_collisions link1="ee_link" link2="link4" reason="Default"/>
+
+</robot>

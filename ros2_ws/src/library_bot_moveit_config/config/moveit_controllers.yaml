@@ -1,0 +1,17 @@
+moveit_simple_controller_manager:
+  controller_names:
+    - arm_controller
+
+  arm_controller:
+    type: FollowJointTrajectory
+    action_ns: follow_joint_trajectory
+    default: true
+    joints:
+      - joint1_waist
+      - joint2_shoulder
+      - joint3_elbow
+      - joint4_wrist1
+      - joint5_wrist2
+      - joint6_wrist3
+
+moveit_controller_manager: moveit_simple_controller_manager/MoveItSimpleControllerManager

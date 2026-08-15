@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <!--
+    ros2_control block using mock_components/GenericSystem.
+
+    Real motors (steppers, per the plan doc) aren't wired to ROS2 control
+    yet - this is a placeholder hardware interface so MoveIt2 has something
+    to command and read joint states from in sim, the same "sim placeholder
+    for the eventual real interface" pattern already used for MoveIt2/KDL
+    itself (project plan Section 6.1). Swap this block for a real
+    ros2_control hardware plugin later without touching anything else in
+    this package.
+  -->
+  <xacro:macro name="library_bot_ros2_control" params="name:=library_bot">
+    <ros2_control name="${name}" type="system">
+      <hardware>
+        <plugin>mock_components/GenericSystem</plugin>
+      </hardware>
+      <joint name="joint1_waist">
+        <command_interface name="position"/>
+        <state_interface name="position"/>
+        <state_interface name="velocity"/>
+      </joint>
+      <joint name="joint2_shoulder">
+        <command_interface name="position"/>
+        <state_interface name="position"/>
+        <state_interface name="velocity"/>
+      </joint>
+      <joint name="joint3_elbow">
+        <command_interface name="position"/>
+        <state_interface name="position"/>
+        <state_interface name="velocity"/>
+      </joint>
+      <joint name="joint4_wrist1">
+        <command_interface name="position"/>
+        <state_interface name="position"/>
+        <state_interface name="velocity"/>
+      </joint>
+      <joint name="joint5_wrist2">
+        <command_interface name="position"/>
+        <state_interface name="position"/>
+        <state_interface name="velocity"/>
+      </joint>
+      <joint name="joint6_wrist3">
+        <command_interface name="position"/>
+        <state_interface name="position"/>
+        <state_interface name="velocity"/>
+      </joint>
+    </ros2_control>
+  </xacro:macro>
+</robot>

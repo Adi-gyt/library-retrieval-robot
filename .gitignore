@@ -21,3 +21,13 @@ __pycache__/
 .vscode/
 .DS_Store
 ros2_ws/*.png
+
+# Backup files from in-place edits
+*.bak
+*.bak2
+*.bak3
+
+# Generated URDF visualization output (regenerate via urdf_to_graphiz if needed)
+ros2_ws/library_bot.gv
+ros2_ws/library_bot.pdf
+ros2_ws/src/library_bot_moveit_config/scripts/*.bak
