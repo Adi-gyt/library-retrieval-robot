@@ -95,11 +95,6 @@
           <max_depth>0.6</max_depth>
           <ros>
             <namespace>d405</namespace>
-            <remapping>image_raw:=color/image_raw</remapping>
-            <remapping>camera_info:=color/camera_info</remapping>
-            <remapping>depth/image_raw:=depth/image_rect_raw</remapping>
-            <remapping>depth/camera_info:=depth/camera_info</remapping>
-            <remapping>points:=depth/points</remapping>
           </ros>
           <camera_name>d405</camera_name>
           <frame_name>d405_optical_frame</frame_name>

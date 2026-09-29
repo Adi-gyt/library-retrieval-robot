@@ -24,7 +24,10 @@
        from ee_link per the xacro:d405_camera include) and is the frame the
        vision pipeline's back-projected/transformed target pose is defined
        against downstream (base_footprint-frame per Sim Step 5). -->
-  <end_effector name="ee" parent_link="ee_link" group="arm"/>
+  <group name="ee_group">
+    <link name="ee_link"/>
+  </group>
+  <end_effector name="ee" parent_link="ee_link" group="ee_group" parent_group="arm"/>
 
   <!-- ============ NAMED GROUP STATES ============ -->
   <!-- All-zero pose. Matches the DH table's convention: every URDF joint's

@@ -31,3 +31,4 @@ ros2_ws/*.png
 ros2_ws/library_bot.gv
 ros2_ws/library_bot.pdf
 ros2_ws/src/library_bot_moveit_config/scripts/*.bak
+*.orig

@@ -4,14 +4,28 @@
 
   Combines the real robot geometry with the ros2_control hardware
   interface macro (config/library_bot.ros2_control.xacro) so that the
-  robot_description passed to ros2_control_node actually contains a
-  <ros2_control> tag. This lives in library_bot_moveit_config rather than
-  editing library_bot_description's own xacro file directly, keeping the
-  mock-hardware-for-testing concern separate from the robot's real
-  geometry description.
+  robot_description passed to ros2_control actually contains a
+  <ros2_control> tag. Lives in library_bot_moveit_config so the
+  control concern stays separate from the robot's geometry description.
+
+  Argument:
+    use_sim (default false)
+      false -> mock hardware, no Gazebo plugin (move_group.launch.py)
+      true  -> GazeboSystem + the gazebo_ros2_control plugin that loads
+               ros2_controllers.yaml inside Gazebo (gazebo_moveit.launch.py)
 -->
 <robot name="library_bot" xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <xacro:arg name="use_sim" default="false"/>
+
   <xacro:include filename="$(find library_bot_description)/urdf/library_bot.urdf.xacro"/>
   <xacro:include filename="$(find library_bot_moveit_config)/config/library_bot.ros2_control.xacro"/>
-  <xacro:library_bot_ros2_control/>
+  <xacro:library_bot_ros2_control use_sim="$(arg use_sim)"/>
+
+  <xacro:if value="$(arg use_sim)">
+    <gazebo>
+      <plugin filename="libgazebo_ros2_control.so" name="gazebo_ros2_control">
+        <parameters>$(find library_bot_moveit_config)/config/ros2_controllers.yaml</parameters>
+      </plugin>
+    </gazebo>
+  </xacro:if>
 </robot>
