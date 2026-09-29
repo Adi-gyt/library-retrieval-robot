@@ -32,3 +32,6 @@ ros2_ws/library_bot.gv
 ros2_ws/library_bot.pdf
 ros2_ws/src/library_bot_moveit_config/scripts/*.bak
 *.orig
+ros2_ws/build/
+ros2_ws/install/
+ros2_ws/log/
