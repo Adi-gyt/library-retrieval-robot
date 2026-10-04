@@ -30,12 +30,16 @@
       </joint>
       <joint name="joint2_shoulder">
         <command_interface name="position"/>
-        <state_interface name="position"/>
+        <state_interface name="position">
+          <param name="initial_value">-0.8495</param>
+        </state_interface>
         <state_interface name="velocity"/>
       </joint>
       <joint name="joint3_elbow">
         <command_interface name="position"/>
-        <state_interface name="position"/>
+        <state_interface name="position">
+          <param name="initial_value">1.699</param>
+        </state_interface>
         <state_interface name="velocity"/>
       </joint>
       <joint name="joint4_wrist1">
@@ -45,11 +49,39 @@
       </joint>
       <joint name="joint5_wrist2">
         <command_interface name="position"/>
-        <state_interface name="position"/>
+        <state_interface name="position">
+          <param name="initial_value">-0.8495</param>
+        </state_interface>
         <state_interface name="velocity"/>
       </joint>
       <joint name="joint6_wrist3">
         <command_interface name="position"/>
+        <state_interface name="position"/>
+        <state_interface name="velocity"/>
+      </joint>
+      <joint name="finger_left_joint">
+        <xacro:if value="${use_sim}">
+          <command_interface name="effort">
+            <param name="min">-40</param>
+            <param name="max">40</param>
+          </command_interface>
+        </xacro:if>
+        <xacro:unless value="${use_sim}">
+          <command_interface name="position"/>
+        </xacro:unless>
+        <state_interface name="position"/>
+        <state_interface name="velocity"/>
+      </joint>
+      <joint name="finger_right_joint">
+        <xacro:if value="${use_sim}">
+          <command_interface name="effort">
+            <param name="min">-40</param>
+            <param name="max">40</param>
+          </command_interface>
+        </xacro:if>
+        <xacro:unless value="${use_sim}">
+          <command_interface name="position"/>
+        </xacro:unless>
         <state_interface name="position"/>
         <state_interface name="velocity"/>
       </joint>

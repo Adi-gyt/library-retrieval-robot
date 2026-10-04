@@ -1,0 +1,13 @@
+diff --git a/boeing_gazebo_model_attachment_plugin/src/boeing_gazebo_model_attachment_plugin.cpp b/boeing_gazebo_model_attachment_plugin/src/boeing_gazebo_model_attachment_plugin.cpp
+index 9304fbc..a433e46 100644
+--- a/boeing_gazebo_model_attachment_plugin/src/boeing_gazebo_model_attachment_plugin.cpp
++++ b/boeing_gazebo_model_attachment_plugin/src/boeing_gazebo_model_attachment_plugin.cpp
+@@ -209,7 +209,7 @@ namespace gazebo
+         ignition::math::Pose3d l1rl = l1->RelativePose();
+         ignition::math::Pose3d l2rl = l2->RelativePose();
+         ignition::math::Pose3d p = (m1wp * l1rl * l2rl.Inverse());
+-        m2->SetWorldPose(p);
++        (void)p;  // teleport disabled: keep the current pose offset
+ 
+         physics::JointPtr joint = m1->CreateJoint(joint_name, "fixed", l1, l2);
+ 

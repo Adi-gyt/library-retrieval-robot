@@ -171,5 +171,7 @@
     <axis xyz="0 0 1"/>
     <limit lower="-3.14" upper="3.14" effort="15" velocity="1.5"/>
   </joint>
-  <xacro:d405_camera parent="ee_link" xyz="0.05 0 0" rpy="0 0 0"/>
+  <xacro:include filename="$(find library_bot_description)/urdf/gripper.xacro"/>
+  <xacro:parallel_gripper parent="ee_link"/>
+  <xacro:d405_camera parent="ee_link" xyz="0.03 0 -0.045" rpy="0 0 0"/>
 </robot>

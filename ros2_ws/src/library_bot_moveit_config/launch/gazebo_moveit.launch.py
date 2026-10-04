@@ -117,7 +117,9 @@ def generate_launch_description():
     spawn_entity = Node(
         package="gazebo_ros",
         executable="spawn_entity.py",
-        arguments=["-topic", "robot_description", "-entity", "library_bot"],
+        arguments=[
+            "-topic", "robot_description", "-entity", "library_bot",
+        ],
         output="screen",
     )
 
@@ -133,6 +135,14 @@ def generate_launch_description():
         package="controller_manager",
         executable="spawner",
         arguments=["arm_controller", "--controller-manager", "/controller_manager"],
+        parameters=[USE_SIM_TIME],
+        output="screen",
+    )
+
+    gripper_controller_spawner = Node(
+        package="controller_manager",
+        executable="spawner",
+        arguments=["gripper_controller", "--controller-manager", "/controller_manager"],
         parameters=[USE_SIM_TIME],
         output="screen",
     )
@@ -175,6 +185,12 @@ def generate_launch_description():
             RegisterEventHandler(
                 OnProcessExit(
                     target_action=arm_controller_spawner,
+                    on_exit=[gripper_controller_spawner],
+                )
+            ),
+            RegisterEventHandler(
+                OnProcessExit(
+                    target_action=gripper_controller_spawner,
                     on_exit=[move_group_node],
                 )
             ),

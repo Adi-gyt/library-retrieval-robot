@@ -8,6 +8,9 @@ controller_manager:
     arm_controller:
       type: joint_trajectory_controller/JointTrajectoryController
 
+    gripper_controller:
+      type: joint_trajectory_controller/JointTrajectoryController
+
 arm_controller:
   ros__parameters:
     joints:
@@ -24,3 +27,19 @@ arm_controller:
       - velocity
     open_loop_control: true
     allow_integration_in_goal_trajectories: true
+
+gripper_controller:
+  ros__parameters:
+    joints:
+      - finger_left_joint
+      - finger_right_joint
+    command_interfaces:
+      - effort
+    state_interfaces:
+      - position
+      - velocity
+    open_loop_control: false
+    allow_integration_in_goal_trajectories: true
+    gains:
+      finger_left_joint: {p: 250.0, i: 0.0, d: 3.0, i_clamp: 0.0}
+      finger_right_joint: {p: 250.0, i: 0.0, d: 3.0, i_clamp: 0.0}
