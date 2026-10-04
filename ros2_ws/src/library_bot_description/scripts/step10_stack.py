@@ -2,6 +2,7 @@
 """Move a 3-box stack from y=+0.15 to y=PLACE_Y, one box at a time, chosen by marker ID."""
 import os
 import subprocess
+import time
 import rclpy
 import step7_marker_reach as s7
 import step8_grasp as s8
@@ -22,11 +23,17 @@ def box_pose(name):
     return [float(v) for v in out] if len(out) == 6 else None
 
 
-def call(srv, typ, body):
-    r = subprocess.run(["ros2", "service", "call", srv,
-                        "boeing_gazebo_model_attachment_plugin_msgs/srv/" + typ, body],
-                       capture_output=True, text=True)
-    return "success=True" in r.stdout
+def call(srv, typ, body, tries=3):
+    for i in range(tries):
+        r = subprocess.run(["ros2", "service", "call", srv,
+                            "boeing_gazebo_model_attachment_plugin_msgs/srv/" + typ, body],
+                           capture_output=True, text=True)
+        if "success=True" in r.stdout:
+            return True
+        tail = (r.stdout.strip().splitlines() or [""])[-1] + " | " + r.stderr.strip()[-200:]
+        print(f"  service {srv} try {i + 1} failed: {tail}")
+        time.sleep(1.0)
+    return False
 
 
 def attach(name):

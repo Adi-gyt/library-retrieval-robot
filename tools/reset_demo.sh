@@ -1,4 +1,5 @@
 #!/bin/bash
+[ -f ~/projects/library-retrieval-robot/ros2_ws/install/setup.bash ] && source ~/projects/library-retrieval-robot/ros2_ws/install/setup.bash
 source ~/gz_env.sh
 cd ~/projects/library-retrieval-robot/ros2_ws/src/library_bot_description
 for n in 1 2 3; do
